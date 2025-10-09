@@ -1,0 +1,124 @@
+.logo-primario {
+  height: 5rem;
+  width: 5rem;
+}
+
+.navbar-portada {
+  height: 7rem;
+  background-color: rgb(172, 157, 138);
+}
+
+.login-form {
+  background-color: rgb(153, 126, 180);
+  border-radius: 1rem;
+  color: white;
+}
+
+.logo-login {
+  font-size: 8rem;
+  color: rgb(255, 81, 0);
+}
+
+.btn-login {
+  background-color: rgb(255, 81, 0);
+  border-color: purple;
+  color: purple;
+  font-size: 1.2rem;
+}
+.btn-login:hover {
+  background-color: purple;
+  color: rgb(255, 81, 0);
+}
+
+.register-link a {
+  color: purple;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+body {
+  background-color: rgb(235, 228, 218);
+}
+
+
+#label-create{
+    font-size: 3rem;
+    color:purple;
+}
+
+.h2-AC {
+    font-family: Impact,'Arial Narrow Bold', sans-serif;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #333; /* Color principal del texto */
+    margin-bottom: 10px;
+}
+
+/* Línea decorativa debajo del h2 */
+.h2-AC::after {
+    width: 80px;
+    height: 4px;
+    background-color: #4285f4; /* Color moderno (azul Google-like) */
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* Sombra para darle un efecto más destacado */
+.h2-AC {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.h2-AC:hover {
+    color: #34a853; /* Verde brillante al pasar el cursor */
+    transition: color 0.3s ease;
+}
+
+.button {
+    width: 10em;
+    height: 10em;
+    position: relative;
+    border-radius: 50%;
+    background-color: #d3fafb;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease; /* 2s segundos para el giro, 0.3s para aumentar */
+    cursor: pointer;
+}
+
+.button:hover {
+    transform: scale(1.2); /* El botón se agranda al 120% de su tamaño original */
+}
+
+.button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Tooltip */
+.image-container {
+    position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 10;
+}
+
+.image-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}

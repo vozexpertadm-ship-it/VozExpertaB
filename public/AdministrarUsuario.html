@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Usuarios</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="AdministrarUsuario.js"></script>
+</head>
+<nav class="navbar">
+  <div class="container-fluid navbar-portada">
+    <a class="navbar-brand" href="ventana.html">
+      <img src="./Imagenes/voz_experta_logo_primario.svg" class="logo-primario" alt="">
+    </a>
+    </button>
+  </div>
+  
+</nav>
+<body>
+  <div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1>Lista de Usuarios</h1>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal" id="addUserButton">Agregar Usuario</button>
+    </div>
+
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+        </tr>
+      </thead>
+      <tbody id="userTable"></tbody>
+    </table>
+
+    <div class="card mt-4" id="userDetails">
+      <div class="card-body">
+        <h5 class="card-title">Detalles del Usuario</h5>
+        <p class="card-text">Selecciona un usuario para ver más información.</p>
+        <div id="actionButtons" class="d-none">
+          <button class="btn btn-warning" id="modifyButton">Modificar</button>
+          <button class="btn btn-danger" id="deleteButton">Eliminar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Bootstrap -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Agregar Usuario</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="userForm" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="name" required>
+                <div class="invalid-feedback">Por favor ingresa el nombre.</div>
+              </div>
+              <div class="mb-3">
+                <label for="lastname" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="lastname" required>
+                <div class="invalid-feedback">Por favor ingresa el apellido.</div>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo</label>
+                <input type="email" class="form-control" id="email" required>
+                <div class="invalid-feedback">Por favor ingresa un correo válido.</div>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password">
+                <div class="invalid-feedback">Por favor ingresa una contraseña si quieres cambiarla.</div>
+              </div>
+              <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="isAdmin">
+                <label class="form-check-label" for="isAdmin">Volver administrador</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelButton">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

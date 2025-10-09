@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Usuarios</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container-fluid navbar-portada">
+      <a class="navbar-brand" href="ventana.html">
+        <img src="./Imagenes/voz_experta_logo_primario.svg" class="logo-primario" alt="Logo">
+      </a>
+    </div>
+  </nav>
+
+  <!-- Contenedor principal -->
+  <div class="container text-center py-5">
+    <h2 class="h2-AC mb-4">Selecciona una opción</h2>
+
+    <div class="row justify-content-center g-4">
+
+      <!-- Botón Crear Cuestionario -->
+      <div class="col-7 col-sm-4 col-md-2">
+        <a href="cuestionario_creacion.html" class="text-decoration-none">
+          <div class="image-container">
+            <div class="button mx-auto">
+              <img src="Imagenes/crearC.png" alt="Crear cuestionario" class="img-fluid">
+            </div>
+            <span class="tooltip">Crear cuestionario</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Botón Modificar Cuestionario -->
+      <div class="col-7 col-sm-4 col-md-2">
+        <a href="cuestionario_modificar.html" class="text-decoration-none">
+          <div class="image-container">
+            <div class="button mx-auto">
+              <img src="Imagenes/modificarC.png" alt="Modificar cuestionarios" class="img-fluid">
+            </div>
+            <span class="tooltip">Modificar cuestionarios</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Botón Ver Cuestionarios -->
+      <div class="col-7 col-sm-4 col-md-2">
+        <a href="cuestionario_listado.html" class="text-decoration-none">
+          <div class="image-container">
+            <div class="button mx-auto">
+              <img src="Imagenes/verC.png" alt="Ver cuestionarios" class="img-fluid">
+            </div>
+            <span class="tooltip">Ver cuestionarios</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

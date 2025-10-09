@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Establecer nueva contraseña</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS propio -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navbar opcional -->
+  <nav class="navbar">
+    <div class="container-fluid navbar-portada">
+      <a class="navbar-brand" href="#">
+        <img src="./Imagenes/voz_experta_logo_primario.svg" class="logo-primario" alt="Logo">
+      </a>
+    </div>
+  </nav>
+
+  <!-- Sección centrada -->
+  <section class="d-flex justify-content-center align-items-center section-login mt-5">
+    <div class="login-form border border-light-subtle border-opacity-50 p-4">
+      <form id="reset-form">
+        <div class="text-center mb-4">
+          <p id="label-create">Establecer nueva contraseña</p>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input type="password" class="form-control" id="newPassword" placeholder="Nueva contraseña" required>
+          <label for="newPassword">Nueva contraseña</label>
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-login">Restablecer contraseña</button>
+        </div>
+      </form>
+
+      <div id="message" class="text-center mt-3"></div>
+
+      <div class="text-center mt-3">
+        <a href="index.html">Volver al inicio de sesión</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="nueva_contrasena.js" defer></script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

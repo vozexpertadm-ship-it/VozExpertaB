@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Listado de Cuestionarios</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="styleAU.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<nav class="navbar">
+<div class="container-fluid navbar-portada">
+    <a class="navbar-brand" href="ventana.html">
+    <img src="./Imagenes/voz_experta_logo_primario.svg" class="logo-primario" alt="Logo">
+    </a>
+
+    <a href="AdministrarCuestionarios.html" class="btn btn-outline-secondary bg-light">
+        <img src="Imagenes/atras.png" alt="Atrás" width="20" class="me-1"> Atrás
+    </a>
+</div>
+</nav>
+
+<body class="bg-light">
+
+  <div class="container py-4">
+
+    <h1 class="text-center mb-4">Listado de Cuestionarios</h1>
+
+    <!-- Tabla de cuestionarios -->
+    <div class="table-responsive shadow-sm rounded bg-white p-3">
+      <table class="table table-hover align-middle text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Fecha de Apertura</th>
+            <th>Fecha de Cierre</th>
+          </tr>
+        </thead>
+        <tbody id="cuestionarios-table"></tbody>
+      </table>
+    </div>
+
+    <!-- Sección de preguntas -->
+    <div class="mt-5">
+      <h2 class="mb-3 text-primary">Preguntas del Cuestionario</h2>
+      <div id="preview-contenido" class="border rounded p-3 bg-white shadow-sm"></div>
+    </div>
+
+    <!-- Botón de evaluación -->
+    <div id="evaluacion-container" class="text-center mt-4" style="display: none;">
+      <button id="button-ejecutar" class="btn btn-success px-4 py-2 fw-bold" onclick="ejecutarEvaluacion()">
+        Ejecutar Evaluación
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Archivo JS externo -->
+  <script src="cuestionario_listado.js"></script>
+
+</body>
+</html>
