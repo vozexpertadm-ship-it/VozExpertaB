@@ -968,7 +968,9 @@ app.post('/ejecutar-evaluacion', async (req, res) => {
             <ul>
               ${respuestas.rows.map(r => `<li>${r.pregunta}: ${r.promedio_pregunta}</li>`).join('')}
             </ul>
-            <p>Si deseas enviar comentarios para mejorar, hazlo desde este <a href="${baseUrl}/comentario_anonimo.html">formulario anónimo</a>.</p>
+            <p>Si deseas enviar comentarios o propuestas para mejorar, hazlo desde este formulario que puede o no ser anónimo 
+            (<a href="${baseUrl}/comentario_anonimo.html">formulario anónimo es un link para que puedas escribir un comentario</a>). 
+            Estos comentarios serán enviados a todas las consejeras.</p>
           `;
           await client.query(`UPDATE usuario SET strike = strike + 1 WHERE id_usuario = $1`,[id_objetivo]);
           
@@ -1056,6 +1058,7 @@ app.post('/mensaje-strike', async (req, res) => {
     let mensaje = `<h3>Usuarios con 2 o más strikes:</h3><ul>`;
     respuestas.forEach(user => {
       mensaje += `<li>${user.nombre} ${user.apellido}, strikes: ${user.strike}</li>`;
+      //Agregar la pregunta con la(s) menor(es) calificacion(es). 
     });
     mensaje += `</ul>`;
 
