@@ -136,7 +136,7 @@ function ejecutarEvaluacion() {
       btn.disabled = false;
       btn.style.display = "none";
 
-      // 🔥 Ahora sí enviamos el correo con el id correcto
+
       MensajeStrike();
     })
     .catch(err => {
