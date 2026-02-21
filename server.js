@@ -1040,52 +1040,114 @@ app.post('/comentario-anonimo', async (req, res) => {
 });
 
 app.post('/mensaje-strike', async (req, res) => {
-  console.log("entra mensaje-strike end point");
+  //console.log("entra mensaje-strike end point");
+
+  const { id_cuestionario } = req.body;
+
+  if (!id_cuestionario) {
+    return res.status(400).json({ mensaje: "Falta id_cuestionario" });
+  }
+
   try {
-    const resultado = await client.query(`
-      SELECT nombre, apellido, correo, strike 
-      FROM usuario
-      WHERE strike >= 2
-    `);
 
-    const respuestas = resultado.rows;
+    const sql = `
+      WITH usuarios_strike AS (
+          SELECT id_usuario, nombre, apellido, strike
+          FROM usuario
+          WHERE strike >= 2
+      ),
 
-    if (respuestas.length === 0) {
-      return res.status(200).json({ mensaje: 'No hay usuarios con strikes suficientes.' });
+      umbral_cte AS (
+          SELECT umbral_aceptacion
+          FROM cuestionario
+          WHERE id_cuestionario = $1
+      ),
+
+      preguntas_falladas AS (
+          SELECT 
+              u.id_usuario,
+              u.nombre,
+              u.apellido,
+              u.strike,
+              pq.pregunta
+          FROM usuarios_strike u
+          JOIN resultado_cuant rc 
+              ON rc.id_usuarioevaluado = u.id_usuario
+          JOIN pregunta_cuant pq 
+              ON rc.id_pregunta = pq.id_pregunta
+          WHERE pq.tipo = 'matrix'
+            AND pq.id_cuestionario = $1
+          GROUP BY 
+              u.id_usuario,
+              u.nombre,
+              u.apellido,
+              u.strike,
+              pq.pregunta
+          HAVING AVG(rc.respuesta) < (
+              SELECT umbral_aceptacion FROM umbral_cte
+          )
+      )
+
+      SELECT 
+          id_usuario,
+          nombre,
+          apellido,
+          strike,
+          ARRAY_AGG(pregunta) AS preguntas
+      FROM preguntas_falladas
+      GROUP BY id_usuario, nombre, apellido, strike
+      ORDER BY id_usuario;
+    `;
+
+    const resultado = await client.query(sql, [id_cuestionario]);
+
+    if (resultado.rows.length === 0) {
+      return res.status(200).json({
+        mensaje: "No hay usuarios con strikes y preguntas debajo del umbral."
+      });
     }
 
-    // Crear el mensaje HTML con la lista
-    let mensaje = `<h3>Usuarios con 2 o más strikes:</h3><ul>`;
-    respuestas.forEach(user => {
-      mensaje += `<li>${user.nombre} ${user.apellido}, strikes: ${user.strike}</li>`;
-      //Agregar la pregunta con la(s) menor(es) calificacion(es). 
+    // 🔥 Construcción del HTML
+    let mensaje = `<h3>Usuarios con 2 o más strikes:</h3>`;
+
+    resultado.rows.forEach(user => {
+
+      mensaje += `
+        <p>
+          <strong>${user.nombre} ${user.apellido}</strong>
+          (Strikes: ${user.strike})
+        </p>
+        <ul>
+      `;
+
+      user.preguntas.forEach(pregunta => {
+        mensaje += `<li>${pregunta}</li>`;
+      });
+
+      mensaje += `</ul>`;
     });
-    mensaje += `</ul>`;
 
-    console.log(mensaje);
+    // Obtener correos de supervisores (id_tipo = 1)
+    const correoQuery = await client.query(`
+      SELECT correo FROM usuario WHERE id_tipo = 1
+    `);
 
-    // Obtener correos (como array de strings)
-    const correoQuery = await client.query(`SELECT correo FROM usuario WHERE id_tipo = 1`);
     const correos = correoQuery.rows.map(r => r.correo);
-
-    console.log("query select id_tipo=1 datos: ",correoQuery);
-    console.log("correos después el query: ", correos)
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      bcc: correos, // esto puede ser array o string separado por comas
-      subject: 'Resultado de tu Evaluación',
+      bcc: correos,
+      subject: 'Usuarios con bajo desempeño',
       html: mensaje
     });
 
-    res.status(200).json({ mensaje: 'Correo enviado correctamente.' });
+    res.status(200).json({ mensaje: "Correo enviado correctamente." });
 
   } catch (error) {
-    console.error("Error al guardar/enviar comentario:", error);
-    res.status(500).json({ error: 'Error del servidor.' });
+    console.error("Error en mensaje-strike:", error);
+    res.status(500).json({ error: "Error del servidor." });
   }
 });
-
 
 
 
