@@ -1,31 +1,43 @@
+// Ocultar botón al inicio
 document.getElementById("button-ejecutar").style.display = 'none';
+
 let id_Cuestionario = null;
 
+// ==========================================
 // Obtener lista de cuestionarios
+// ==========================================
 fetch('/cuestionarios-todos')
   .then(res => res.json())
   .then(data => {
     const table = document.getElementById('cuestionarios-table');
+
     data.forEach(c => {
       const row = document.createElement('tr');
       row.classList.add('cursor-pointer');
+
       row.innerHTML = `
         <td>${c.nombre}</td>
         <td>${c.fecha_apertura.slice(0, 10)}</td>
         <td>${c.fecha_cierre.slice(0, 10)}</td>
       `;
+
       row.addEventListener('click', () => cargarPreguntas(c.id_cuestionario));
       table.appendChild(row);
     });
 
-    // Mostrar el botón siempre (modo prueba)
+    // Mostrar contenedor
     document.getElementById('evaluacion-container').style.display = 'block';
   })
   .catch(err => console.error("Error al obtener cuestionarios:", err));
 
 
-// Cargar preguntas del cuestionario seleccionado
+// ==========================================
+// Cargar preguntas del cuestionario
+// ==========================================
 function cargarPreguntas(id) {
+
+  id_Cuestionario = id;
+
   fetch('/get-cuestionarios', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -33,39 +45,63 @@ function cargarPreguntas(id) {
   })
   .then(res => res.json())
   .then(preguntas => {
+
     const div = document.getElementById('preview-contenido');
     div.innerHTML = '';
+
     preguntas.forEach((p, i) => {
       const bloque = document.createElement('div');
       bloque.className = 'mb-3 p-3 border rounded bg-light';
+
       bloque.innerHTML = `
         <strong>${i + 1}. ${p.texto_pregunta}</strong><br>
         <em class="text-muted">Tipo: ${p.tipo_pregunta}</em>
       `;
+
       div.appendChild(bloque);
     });
+
+    // Mostrar botón cuando ya hay cuestionario seleccionado
+    document.getElementById("button-ejecutar").style.display = 'block';
   })
   .catch(err => console.error("Error al cargar preguntas:", err));
-
-  id_Cuestionario = id;
-  document.getElementById("button-ejecutar").style.display = 'block';
 }
 
 
-// Mostrar mensaje de confirmación tras evaluación
+// ==========================================
+// Enviar correo de strikes
+// ==========================================
 function MensajeStrike() {
-  fetch('/mensaje-strike', { method: 'POST' })
-    .then(res => res.ok ? res.json() : Promise.reject("Error en la solicitud"))
-    .then(data => alert(data.mensaje || 'Evaluación ejecutada correctamente.'))
-    .catch(error => {
-      console.error('Error al ejecutar evaluación:', error);
-      alert('Ocurrió un error al ejecutar la evaluación.');
-    });
+
+  if (!id_Cuestionario) {
+    alert("No hay cuestionario seleccionado.");
+    return;
+  }
+
+  fetch('/mensaje-strike', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id_cuestionario: id_Cuestionario })
+  })
+  .then(res => res.ok ? res.json() : Promise.reject("Error en la solicitud"))
+  .then(data => alert(data.mensaje || 'Correo enviado correctamente.'))
+  .catch(error => {
+    console.error('Error al enviar mensaje-strike:', error);
+    alert('Ocurrió un error al enviar el correo.');
+  });
 }
 
 
+// ==========================================
 // Ejecutar evaluación
+// ==========================================
 function ejecutarEvaluacion() {
+
+  if (!id_Cuestionario) {
+    alert("No hay cuestionario seleccionado.");
+    return;
+  }
+
   const btn = document.querySelector('#evaluacion-container button');
 
   if (!confirm("¿Estás seguro de que deseas ejecutar la evaluación ahora?")) return;
@@ -77,6 +113,7 @@ function ejecutarEvaluacion() {
   })
   .then(res => res.json())
   .then(data => {
+
     if (data.yaEvaluado) {
       alert("Este cuestionario ya ha sido evaluado. No puedes ejecutar la evaluación dos veces.");
       return;
@@ -92,10 +129,14 @@ function ejecutarEvaluacion() {
     })
     .then(res => res.json())
     .then(data => {
+
       alert(data.mensaje || "Evaluación ejecutada exitosamente.");
+
       btn.textContent = "Ejecutar Evaluación";
       btn.disabled = false;
       btn.style.display = "none";
+
+      // 🔥 Ahora sí enviamos el correo con el id correcto
       MensajeStrike();
     })
     .catch(err => {
