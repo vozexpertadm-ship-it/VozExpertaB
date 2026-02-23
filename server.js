@@ -1107,7 +1107,6 @@ app.post('/mensaje-strike', async (req, res) => {
       });
     }
 
-    // 🔥 Construcción del HTML
     let mensaje = `<h3>Usuarios con 2 o más strikes:</h3>`;
 
     resultado.rows.forEach(user => {
