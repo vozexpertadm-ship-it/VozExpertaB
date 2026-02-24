@@ -992,8 +992,68 @@ app.post('/ejecutar-evaluacion', async (req, res) => {
           html: mensaje
         });
       }
-    }
+      // NUEVO: Enviar correo de respuestas de texto libre (anónimas)
+    // a presidenta (id_tipo = 1)
+    try {
+      const textoLibreQuery = await client.query(`
+      SELECT 
+        pc.pregunta_c,
+        rc.respuesta
+      FROM resultado_cuali rc
+      JOIN pregunta_cuali pc ON rc.id_preguntac = pc.id_preguntac
+      WHERE rc.id_cuestionario = $1
+        AND COALESCE(TRIM(rc.respuesta), '') <> ''
+      ORDER BY rc.id_resultadoc
+    `, [id_cuestionario]);
+  
+    const respuestasTexto = textoLibreQuery.rows;
+  
+    // Obtener correos de presidentas/supervisoras (id_tipo = 1)
+    const correoQuery = await client.query(`
+      SELECT correo
+      FROM usuario
+      WHERE id_tipo = 1
+        AND COALESCE(TRIM(correo), '') <> ''
+    `);
 
+    const correosPresidenta = correoQuery.rows.map(r => r.correo);
+  
+    if (correosPresidenta.length > 0) {
+      let mensajeTextoLibre = `
+        <h3>Respuestas de texto libre (anónimas)</h3>
+        <p>Las respuestas se muestran sin identificar a quien las respondió.</p>
+        <hr>
+      `;
+  
+      if (respuestasTexto.length === 0) {
+        mensajeTextoLibre += `<p>No se encontraron respuestas de texto libre para este cuestionario.</p>`;
+      } else {
+        respuestasTexto.forEach((r, index) => {
+          mensajeTextoLibre += `
+            <p><strong>${index + 1}. Pregunta:</strong> ${r.pregunta_c}</p>
+            <p><strong>Respuesta:</strong> ${r.respuesta}</p>
+            <hr>
+          `;
+        });
+      }
+  
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        bcc: correosPresidenta,
+        subject: `Respuestas de texto libre (anónimas)`,
+        html: mensajeTextoLibre
+      });
+  
+      console.log("Correo de texto libre anónimo enviado.");
+    } else {
+      console.log("No hay correos con id_tipo = 1 para enviar texto libre.");
+    }
+  
+  } catch (errorTextoLibre) {
+    // Importante: no romper toda la evaluación si este correo falla
+    console.error("Error enviando correo de texto libre:", errorTextoLibre);
+  }
+    }
     res.json({ mensaje: 'Evaluación completada, correos enviados y datos registrados.' });
 
   } catch (error) {
